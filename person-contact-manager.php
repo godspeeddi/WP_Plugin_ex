@@ -17,19 +17,20 @@ if (!defined('ABSPATH')) {
 
 define('PERSON_CONTACT_MANAGER__PLUGIN_DIR', plugin_dir_path(__FILE__));
 
-register_activation_hook(__FILE__, array('person_contact_manager', 'plugin_activation'));
-register_deactivation_hook(__FILE__, array('person_contact_manager', 'plugin_deactivation'));
+
 
 require_once(PERSON_CONTACT_MANAGER__PLUGIN_DIR . 'person-contact-manager-setup.php');
 
 add_action('init', array('person_contact_manager', 'init'));
 
 
-/* add_action('admin_menu' , 'add_to_menu'); */
+// Hook menu creation function
+add_action('admin_menu', 'add_to_menu');
+
 function add_to_menu()
 {
 
-    add_menu_page('Persons Contacts', 'Persons Contacts Manager', 'administrator', 'person-contact-manager', 'person_contact_manager_list_people_page', true, 'dashicons-admin-users', 17.23);
+    add_menu_page('Persons Contacts', 'Persons Contacts Manager', 'manage_options', 'person-contact-manager', 'person_contact_manager_list_people_page', true, 'dashicons-admin-users', 17.23);
 
     add_submenu_page(
         'person-contact-manager',
@@ -70,9 +71,13 @@ function person_contact_manager_edit_person_page()
     // Include view file for adding a new person
     include_once plugin_dir_path(__FILE__) . 'views/edit-person.php';
 }
+// Callback function for add new contact page
+function person_contact_manager_add_contact_page()
+{
+    // Include view file for the dashboard
+    include_once plugin_dir_path(__FILE__) . 'views/add-contact.php';
+}
 
-// Hook menu creation function
-add_action('admin_menu', 'add_to_menu');
 
 
 // Register custom REST API endpoint for adding a person
@@ -117,3 +122,4 @@ function handle_add_person_request($request)
     // Return the ID of the added person
     return new WP_REST_Response($person_id, 200);
 }
+
